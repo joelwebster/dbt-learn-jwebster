@@ -1,0 +1,38 @@
+{{
+  config(
+    materialized='view'
+  )
+}}
+
+with customers as (
+
+    select * from {{ ref('stg_customers') }}
+
+),
+
+orders as (
+
+    select * from {{ ref('stg_orders') }}
+
+),
+
+payments as (
+    
+    select * from {{ ref ('stg_payments') }}
+
+),
+
+final as (
+
+    select
+        orders.order_id,
+        orders.customer_id,
+        payments.payment_amount
+
+    from orders
+
+    left join payments using (order_id)
+
+)
+
+select * from final

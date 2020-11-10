@@ -33,3 +33,19 @@ models:
         tests:
           - accepted_values:
               values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']
+
+  - name: stg_payments
+    description: This model cleans up payment data
+    columns:
+      - name: payment_id
+      - name: order_id
+      - name: payment_amount
+
+  - name: orders
+    description: Each individual order
+    columns:
+      - name: order_id
+      - name: customer_id
+      - name: payment_amount
+  
+  
