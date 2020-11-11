@@ -4,13 +4,8 @@
   )
 }}
 
-with customers as (
 
-    select * from {{ ref('stg_customers') }}
-
-),
-
-orders as (
+with orders as (
 
     select * from {{ ref('stg_orders') }}
 
@@ -22,16 +17,25 @@ payments as (
 
 ),
 
+order_payments as (
+    select
+        order_id,
+        sum(payment_amount) as payment_amount
+
+    from payments
+    group by 1
+),
+
 final as (
 
     select
         orders.order_id,
         orders.customer_id,
-        payments.payment_amount
+        coalesce(order_payments.payment_amount,0) as payment_amount
 
     from orders
 
-    left join payments using (order_id)
+    left join order_payments using (order_id)
 
 )
 
